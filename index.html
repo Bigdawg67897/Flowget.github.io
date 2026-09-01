@@ -1,387 +1,146 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <link rel="manifest" href="manifest.json">
-  <title>Mon Budget</title>
-  <style>
-    :root{
-      --bg:#f3f4f6; --card:#ffffff; --text:#111827; --muted:#6b7280; --line:#e5e7eb;
-      --accent:#111827; --good:#166534; --warn:#92400e; --bad:#991b1b;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    .app{max-width:900px;margin:0 auto;padding:18px 14px 96px}
-    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-    h1{font-size:28px;margin:0} .sub{color:var(--muted);font-size:14px}
-    .pill{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-    .metric .label{color:var(--muted);font-size:13px;margin-bottom:6px}
-    .metric .value{font-size:25px;font-weight:700}
-    .metric .hint{font-size:12px;color:var(--muted);margin-top:5px}
-    .section-title{font-size:18px;font-weight:700;margin:20px 2px 10px}
-    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
-    .row:last-child{border-bottom:none}
-    .small{font-size:12px;color:var(--muted)}
-    .amount{font-weight:650}
-    .income{color:var(--good)} .expense{color:var(--bad)}
-    button,.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:650;background:var(--accent);color:#fff;cursor:pointer}
-    .btn2{background:#fff;color:var(--text);border:1px solid var(--line)}
-    input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:15px}
-    label{font-size:13px;color:var(--muted);display:block;margin-bottom:5px}
-    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .full{grid-column:1/-1}
-    .progress{height:10px;border-radius:99px;background:#e5e7eb;overflow:hidden}
-    .progress > span{display:block;height:100%;background:#111827}
-    .nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));display:flex;justify-content:center}
-    .nav-inner{width:min(900px,100%);display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-    .nav button{background:transparent;color:var(--muted);padding:9px 4px;font-size:12px}
-    .nav button.active{background:#111827;color:#fff}
-    .hidden{display:none!important}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
-    .empty{padding:22px;text-align:center;color:var(--muted)}
-    .tag{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:var(--muted)}
-    .danger{background:#fff;color:var(--bad);border:1px solid #fecaca}
-    canvas{width:100%;height:220px}
-    @media(max-width:640px){
-      .grid{grid-template-columns:1fr 1fr}
-      .form-grid{grid-template-columns:1fr}
-      .full{grid-column:auto}
-      h1{font-size:24px}
-      .metric .value{font-size:21px}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.json">
+<title>Flowget</title>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--good:#166534;--bad:#991b1b;--blue:#1d4ed8}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
+.app{max-width:900px;margin:auto;padding:18px 14px 100px}.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+h1{margin:0;font-size:30px}.sub{color:var(--muted);font-size:14px}.pill{background:white;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px}
+.name{color:var(--muted);font-size:13px;min-height:32px}.value{font-size:23px;font-weight:750;margin-top:6px}.meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+.good{color:var(--good)}.bad{color:var(--bad)}.blue{color:var(--blue)}.section{font-size:19px;font-weight:750;margin:22px 2px 10px}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}
+input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:white}label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.form{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.full{grid-column:1/-1}button,.btn{background:#111827;color:#fff;border:0;border-radius:12px;padding:11px 14px;font-weight:700}
+.btn2{background:white;color:#111827;border:1px solid var(--line)}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.hidden{display:none!important}.small{font-size:12px;color:var(--muted)}
+.nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+.navin{max-width:900px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.nav button{background:transparent;color:var(--muted);padding:9px 2px;font-size:11px}.nav button.active{background:#111827;color:white}
+@media(max-width:640px){.form{grid-template-columns:1fr}.full{grid-column:auto}.value{font-size:21px}}
+</style>
 </head>
 <body>
 <div class="app">
-  <div class="top">
-    <div>
-      <h1>Mon Budget</h1>
-      <div class="sub" id="monthLabel"></div>
-    </div>
-    <div class="pill">Données locales 🔒</div>
-  </div>
+<div class="top"><div><h1>Flowget</h1><div class="sub" id="month"></div></div><div class="pill">Personnel 🔒</div></div>
 
-  <section id="view-dashboard">
-    <div class="grid">
-      <div class="card metric"><div class="label">Revenus</div><div class="value income" id="mIncome">$0</div><div class="hint">ce mois-ci</div></div>
-      <div class="card metric"><div class="label">Dépenses</div><div class="value expense" id="mExpense">$0</div><div class="hint">ce mois-ci</div></div>
-      <div class="card metric"><div class="label">Disponible</div><div class="value" id="mAvailable">$0</div><div class="hint">revenus − dépenses</div></div>
-      <div class="card metric"><div class="label">Épargne</div><div class="value" id="mSavings">$0</div><div class="hint">total des comptes d'épargne</div></div>
-    </div>
+<section id="home">
+<div class="grid" id="accounts"></div>
+<div class="section">Résumé du mois</div>
+<div class="grid">
+<div class="card"><div class="name">Revenus</div><div class="value good" id="income">0 $</div><div class="meta">ce mois-ci</div></div>
+<div class="card"><div class="name">Dépenses</div><div class="value bad" id="expense">0 $</div><div class="meta">ce mois-ci</div></div>
+<div class="card"><div class="name">Disponible</div><div class="value" id="available">0 $</div><div class="meta">revenus − dépenses</div></div>
+<div class="card"><div class="name">Épargne totale</div><div class="value" id="savings">0 $</div><div class="meta">placements + économies</div></div>
+</div>
+<div class="section">Dernières transactions</div><div class="card" id="recent"></div>
+</section>
 
-    <div class="section-title">Budget du mois</div>
-    <div class="card" id="budgetSummary"></div>
+<section id="transactions" class="hidden">
+<div class="toolbar" style="margin-bottom:10px"><button onclick="txform.classList.remove('hidden');txDate.value=new Date().toISOString().slice(0,10)">+ Transaction</button><label class="btn btn2">Importer CSV CIBC<input id="csv" type="file" accept=".csv" style="display:none"></label></div>
+<div id="txform" class="card hidden" style="margin-bottom:12px"><div class="form">
+<div><label>Date</label><input id="txDate" type="date"></div><div><label>Type</label><select id="txType"><option value="expense">Dépense</option><option value="income">Revenu</option></select></div>
+<div class="full"><label>Description</label><input id="txDesc"></div><div><label>Catégorie</label><select id="txCat"></select></div><div><label>Montant</label><input id="txAmount" type="number" step="0.01"></div>
+<div class="full toolbar"><button onclick="saveTx()">Enregistrer</button><button class="btn2" onclick="txform.classList.add('hidden')">Annuler</button></div></div></div>
+<div class="card" id="alltx"></div>
+</section>
 
-    <div class="section-title">Dernières transactions</div>
-    <div class="card" id="recentTransactions"></div>
-  </section>
+<section id="budget" class="hidden"><div class="card"><div class="section" style="margin-top:0">Budgets mensuels</div><div id="budgetEditor"></div><button style="margin-top:12px" onclick="saveBudgets()">Sauvegarder</button></div></section>
 
-  <section id="view-transactions" class="hidden">
-    <div class="toolbar" style="margin-bottom:10px">
-      <button onclick="showAddTransaction()">+ Transaction</button>
-      <label class="btn btn2" style="display:inline-flex;align-items:center;margin:0">
-        Importer CSV CIBC
-        <input id="csvFile" type="file" accept=".csv,text/csv" style="display:none">
-      </label>
-    </div>
-    <div id="transactionForm" class="card hidden" style="margin-bottom:12px">
-      <div class="form-grid">
-        <div><label>Date</label><input id="txDate" type="date"></div>
-        <div><label>Type</label><select id="txType"><option value="expense">Dépense</option><option value="income">Revenu</option></select></div>
-        <div class="full"><label>Description</label><input id="txDesc" placeholder="Ex. IGA, salaire, essence…"></div>
-        <div><label>Catégorie</label><select id="txCat"></select></div>
-        <div><label>Montant</label><input id="txAmount" type="number" step="0.01" placeholder="0.00"></div>
-        <div class="full toolbar"><button onclick="saveTransaction()">Enregistrer</button><button class="btn2" onclick="hideAddTransaction()">Annuler</button></div>
-      </div>
-    </div>
-    <div class="card" id="allTransactions"></div>
-  </section>
+<section id="goals" class="hidden"><div class="card"><div class="section" style="margin-top:0">Objectifs</div><div class="form">
+<div><label>Nom</label><input id="goalName"></div><div><label>Montant cible</label><input id="goalTarget" type="number"></div><div><label>Accumulation actuelle</label><input id="goalCurrent" type="number"></div><div style="align-self:end"><button onclick="addGoal()">Ajouter</button></div></div><div id="goalList" style="margin-top:12px"></div></div></section>
 
-  <section id="view-budget" class="hidden">
-    <div class="card">
-      <div class="section-title" style="margin-top:0">Budgets mensuels</div>
-      <div id="budgetEditor"></div>
-      <div class="toolbar" style="margin-top:12px"><button onclick="saveBudgets()">Sauvegarder les budgets</button></div>
-    </div>
-  </section>
-
-  <section id="view-goals" class="hidden">
-    <div class="card">
-      <div class="section-title" style="margin-top:0">Comptes & épargne</div>
-      <div class="form-grid">
-        <div><label>Compte courant</label><input id="accChequing" type="number" step="0.01"></div>
-        <div><label>CELI</label><input id="accTfsa" type="number" step="0.01"></div>
-        <div><label>CELIAPP</label><input id="accFhsa" type="number" step="0.01"></div>
-        <div><label>Autre épargne</label><input id="accOther" type="number" step="0.01"></div>
-        <div class="full"><button onclick="saveAccounts()">Sauvegarder</button></div>
-      </div>
-    </div>
-
-    <div class="section-title">Objectifs</div>
-    <div class="card">
-      <div class="form-grid">
-        <div><label>Nom de l'objectif</label><input id="goalName" placeholder="Ex. Mise de fonds"></div>
-        <div><label>Montant cible</label><input id="goalTarget" type="number" step="0.01"></div>
-        <div><label>Déjà accumulé</label><input id="goalCurrent" type="number" step="0.01"></div>
-        <div style="align-self:end"><button onclick="addGoal()">Ajouter</button></div>
-      </div>
-      <div id="goalList" style="margin-top:14px"></div>
-    </div>
-
-    <div class="section-title">Données</div>
-    <div class="card">
-      <div class="toolbar">
-        <button class="btn2" onclick="exportData()">Exporter ma sauvegarde</button>
-        <label class="btn btn2" style="display:inline-flex;align-items:center;margin:0">
-          Restaurer
-          <input id="restoreFile" type="file" accept=".json,application/json" style="display:none">
-        </label>
-        <button class="danger" onclick="resetData()">Réinitialiser</button>
-      </div>
-      <div class="small" style="margin-top:10px">Aucune donnée bancaire ni mot de passe CIBC n'est stocké. Cette V1 utilise uniquement les données que vous entrez ou importez.</div>
-    </div>
-  </section>
+<section id="settings" class="hidden">
+<div class="card"><div class="section" style="margin-top:0">Réglages des comptes</div><div class="small" style="margin-bottom:14px">Renomme tes comptes et modifie leurs soldes, limites et taux/rendements.</div><div id="accountSettings"></div><button onclick="saveSettings()">Sauvegarder les comptes</button></div>
+<div class="section">Application</div><div class="card"><div class="row"><strong>Version</strong><span>Flowget V2.0</span></div><div class="small" style="margin-top:10px">Les données restent dans le navigateur de cet appareil. Aucun mot de passe CIBC n'est stocké.</div></div>
+</section>
 </div>
 
-<div class="nav">
-  <div class="nav-inner">
-    <button id="nav-dashboard" class="active" onclick="showView('dashboard')">Accueil</button>
-    <button id="nav-transactions" onclick="showView('transactions')">Transactions</button>
-    <button id="nav-budget" onclick="showView('budget')">Budget</button>
-    <button id="nav-goals" onclick="showView('goals')">Épargne</button>
-  </div>
-</div>
+<div class="nav"><div class="navin">
+<button id="nhome" class="active" onclick="view('home')">Accueil</button>
+<button id="ntransactions" onclick="view('transactions')">Transactions</button>
+<button id="nbudget" onclick="view('budget')">Budget</button>
+<button id="ngoals" onclick="view('goals')">Objectifs</button>
+<button id="nsettings" onclick="view('settings')">Réglages</button>
+</div></div>
 
 <script>
-const defaultCategories = ["Logement","Épicerie","Restaurant","Essence","Véhicule","Assurances","Téléphone/Internet","Loisirs","Vêtements","Santé","Abonnements","Impôts","Épargne","Autre"];
-const state = JSON.parse(localStorage.getItem("budgetAppState") || "null") || {
-  transactions: [],
-  budgets: {
-    "Logement":1200,"Épicerie":500,"Restaurant":200,"Essence":300,"Véhicule":400,
-    "Assurances":250,"Téléphone/Internet":150,"Loisirs":200,"Vêtements":100,"Santé":100,
-    "Abonnements":80,"Impôts":0,"Épargne":500,"Autre":150
-  },
-  accounts:{chequing:0,tfsa:0,fhsa:0,other:0},
-  goals:[]
-};
+const cats=["Logement","Épicerie","Restaurant","Essence","Véhicule","Assurances","Téléphone/Internet","Loisirs","Vêtements","Santé","Abonnements","Impôts","Épargne","Autre"];
+const defaults={accounts:[
+{id:"chequing",kind:"chequing",name:"Compte chèque",balance:0},
+{id:"credit",kind:"credit",name:"Compte de crédit",balance:0,limit:0},
+{id:"fhsa",kind:"investment",name:"CELIAPP",balance:0,rate:0,rateDate:""},
+{id:"tfsa_mutual",kind:"investment",name:"CELI fonds mutuels",balance:0,rate:0,rateDate:""},
+{id:"goal_savings",kind:"savings",name:"Économie — objectifs divers",balance:0,rate:0,rateDate:""},
+{id:"tfsa_contrib",kind:"savings",name:"Économie — cotisations CELI",balance:0,rate:0,rateDate:""}],
+transactions:[],budgets:{"Logement":1200,"Épicerie":500,"Restaurant":200,"Essence":300,"Véhicule":400,"Assurances":250,"Téléphone/Internet":150,"Loisirs":200,"Vêtements":100,"Santé":100,"Abonnements":80,"Impôts":0,"Épargne":500,"Autre":150},goals:[]};
 
-function persist(){ localStorage.setItem("budgetAppState", JSON.stringify(state)); render(); }
-function money(n){ return new Intl.NumberFormat("fr-CA",{style:"currency",currency:"CAD"}).format(Number(n||0)); }
-function thisMonthKey(){ let d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`; }
-function monthName(){ return new Intl.DateTimeFormat("fr-CA",{month:"long",year:"numeric"}).format(new Date()); }
-function monthlyTx(){ const k=thisMonthKey(); return state.transactions.filter(t => (t.date||"").startsWith(k)); }
-function sum(arr, type){ return arr.filter(t=>t.type===type).reduce((a,b)=>a+Number(b.amount||0),0); }
+function clone(x){return JSON.parse(JSON.stringify(x))}
+let state=load();
+function load(){
+ let raw=JSON.parse(localStorage.getItem("flowgetState")||localStorage.getItem("budgetAppState")||"null");
+ if(!raw)return clone(defaults);
+ if(raw.accounts && !Array.isArray(raw.accounts)){
+   let a=raw.accounts;
+   raw={accounts:[
+    {...defaults.accounts[0],balance:+(a.chequing||0)},
+    {...defaults.accounts[1]},
+    {...defaults.accounts[2],balance:+(a.fhsa||0)},
+    {...defaults.accounts[3],balance:+(a.tfsa||0)},
+    {...defaults.accounts[4],balance:+(a.other||0)},
+    {...defaults.accounts[5]}],transactions:raw.transactions||[],budgets:raw.budgets||clone(defaults.budgets),goals:raw.goals||[]};
+ }
+ const map=new Map((raw.accounts||[]).map(a=>[a.id,a]));
+ raw.accounts=defaults.accounts.map(a=>({...a,...(map.get(a.id)||{})}));
+ raw.transactions=raw.transactions||[];raw.budgets=raw.budgets||clone(defaults.budgets);raw.goals=raw.goals||[];
+ return raw;
+}
+function persist(){localStorage.setItem("flowgetState",JSON.stringify(state));render()}
+function money(n){return new Intl.NumberFormat("fr-CA",{style:"currency",currency:"CAD"}).format(+n||0)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function fmtDate(s){if(!s)return "date non renseignée";return new Intl.DateTimeFormat("fr-CA",{year:"numeric",month:"short",day:"numeric"}).format(new Date(s+"T12:00:00"))}
+function acct(id){return state.accounts.find(a=>a.id===id)}
+function monthKey(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`}
+function monthTx(){let k=monthKey();return state.transactions.filter(t=>(t.date||"").startsWith(k))}
+function sum(t){return monthTx().filter(x=>x.type===t).reduce((s,x)=>s+(+x.amount||0),0)}
 
 function render(){
-  document.getElementById("monthLabel").textContent = monthName();
-  const tx = monthlyTx();
-  const inc = sum(tx,"income"), exp = sum(tx,"expense");
-  document.getElementById("mIncome").textContent = money(inc);
-  document.getElementById("mExpense").textContent = money(exp);
-  document.getElementById("mAvailable").textContent = money(inc-exp);
-  const savings = Object.values(state.accounts).slice(1).reduce((a,b)=>a+Number(b||0),0);
-  document.getElementById("mSavings").textContent = money(savings);
+ month.textContent=new Intl.DateTimeFormat("fr-CA",{month:"long",year:"numeric"}).format(new Date());
+ accounts.innerHTML=state.accounts.map(a=>{
+   let meta=a.kind==="credit"?(a.limit?`Limite ${money(a.limit)} • disponible ${money(Math.max(0,a.limit-a.balance))}`:"Dépenses portées au crédit"):
+   a.kind==="investment"?`Rendement ${(+a.rate||0).toFixed(2)} % • ${fmtDate(a.rateDate)}`:
+   a.kind==="savings"?(a.rate?`Taux ${(+a.rate||0).toFixed(2)} % • ${fmtDate(a.rateDate)}`:"Compte d'économie"):"Solde disponible";
+   let cls=a.kind==="credit"?"bad":(a.kind==="investment"||a.kind==="savings"?"blue":"");
+   return `<div class="card"><div class="name">${esc(a.name)}</div><div class="value ${cls}">${money(a.balance)}</div><div class="meta">${esc(meta)}</div></div>`;
+ }).join("");
+ income.textContent=money(sum("income"));expense.textContent=money(sum("expense"));available.textContent=money(sum("income")-sum("expense"));
+ savings.textContent=money(["fhsa","tfsa_mutual","goal_savings","tfsa_contrib"].reduce((s,id)=>s+(+acct(id).balance||0),0));
+ renderTx();renderBudgets();renderGoals();renderSettings();txCat.innerHTML=cats.map(c=>`<option>${c}</option>`).join("");
+}
+function txrow(t){return `<div class="row"><div><strong>${esc(t.description)}</strong><div class="small">${esc(t.date)} • ${esc(t.category)}</div></div><div style="text-align:right"><div class="${t.type==="income"?"good":"bad"}"><strong>${t.type==="income"?"+":"−"}${money(t.amount)}</strong></div><button class="btn2" style="padding:4px 7px;margin-top:4px" onclick="delTx('${t.id}')">Supprimer</button></div></div>`}
+function renderTx(){let s=[...state.transactions].sort((a,b)=>(b.date||"").localeCompare(a.date||""));recent.innerHTML=s.slice(0,5).map(txrow).join("")||'<div class="small">Aucune transaction.</div>';alltx.innerHTML=s.map(txrow).join("")||'<div class="small">Aucune transaction.</div>'}
+function saveTx(){let amt=+txAmount.value||0;if(!txDate.value||!txDesc.value.trim()||amt<=0)return alert("Complète la transaction.");state.transactions.push({id:String(Date.now()),date:txDate.value,type:txType.value,description:txDesc.value.trim(),category:txCat.value,amount:amt});txDesc.value="";txAmount.value="";txform.classList.add("hidden");persist()}
+function delTx(id){state.transactions=state.transactions.filter(t=>t.id!==id);persist()}
+function renderBudgets(){budgetEditor.innerHTML=cats.map(c=>`<div class="row"><span>${c}</span><input class="bi" data-cat="${c}" style="width:150px" type="number" value="${+state.budgets[c]||0}"></div>`).join("")}
+function saveBudgets(){document.querySelectorAll(".bi").forEach(i=>state.budgets[i.dataset.cat]=+i.value||0);persist()}
+function renderGoals(){goalList.innerHTML=state.goals.map(g=>`<div class="row"><div><strong>${esc(g.name)}</strong><div class="small">${money(g.current)} / ${money(g.target)}</div></div><button class="btn2" onclick="state.goals=state.goals.filter(x=>x.id!=='${g.id}');persist()">×</button></div>`).join("")||'<div class="small">Aucun objectif.</div>'}
+function addGoal(){if(!goalName.value.trim()||!(+goalTarget.value))return alert("Entre un objectif.");state.goals.push({id:String(Date.now()),name:goalName.value.trim(),target:+goalTarget.value,current:+goalCurrent.value||0});goalName.value="";goalTarget.value="";goalCurrent.value="";persist()}
+function renderSettings(){accountSettings.innerHTML=state.accounts.map(a=>`<div class="card" style="padding:13px;margin-bottom:10px"><strong>${esc(a.name)}</strong><div class="form" style="margin-top:10px">
+<div class="full"><label>Nom du compte</label><input class="sn" data-id="${a.id}" value="${esc(a.name)}"></div>
+<div><label>Solde actuel</label><input class="sb" data-id="${a.id}" type="number" step="0.01" value="${+a.balance||0}"></div>
+${a.kind==="credit"?`<div><label>Limite de crédit</label><input class="sl" data-id="${a.id}" type="number" step="0.01" value="${+a.limit||0}"></div>`:""}
+${(a.kind==="investment"||a.kind==="savings")?`<div><label>${a.kind==="investment"?"Rendement":"Taux"} (%)</label><input class="sr" data-id="${a.id}" type="number" step="0.01" value="${+a.rate||0}"></div><div><label>Date</label><input class="sd" data-id="${a.id}" type="date" value="${a.rateDate||""}"></div>`:""}
+</div></div>`).join("")}
+function saveSettings(){state.accounts.forEach(a=>{let q=s=>document.querySelector(`${s}[data-id="${a.id}"]`);a.name=q(".sn").value.trim()||a.name;a.balance=+q(".sb").value||0;if(a.kind==="credit")a.limit=+q(".sl").value||0;if(a.kind==="investment"||a.kind==="savings"){a.rate=+q(".sr").value||0;a.rateDate=q(".sd").value||""}});persist();alert("Réglages sauvegardés.")}
 
-  renderBudgetSummary(tx);
-  renderTransactions();
-  renderBudgetEditor();
-  renderAccounts();
-  renderGoals();
-  populateCategories();
-}
+function view(v){["home","transactions","budget","goals","settings"].forEach(x=>{document.getElementById(x).classList.toggle("hidden",x!==v);document.getElementById("n"+x).classList.toggle("active",x===v)});scrollTo(0,0)}
 
-function renderBudgetSummary(tx){
-  const expenses = {};
-  tx.filter(t=>t.type==="expense").forEach(t=>expenses[t.category]=(expenses[t.category]||0)+Number(t.amount));
-  const rows = Object.entries(state.budgets).filter(([k,v])=>Number(v)>0).map(([cat,b])=>{
-    const spent=expenses[cat]||0, pct=Math.min(100, b ? spent/b*100 : 0);
-    return `<div class="row"><div style="flex:1"><div style="display:flex;justify-content:space-between;gap:8px"><strong>${cat}</strong><span class="small">${money(spent)} / ${money(b)}</span></div><div class="progress" style="margin-top:7px"><span style="width:${pct}%"></span></div></div></div>`;
-  }).join("");
-  document.getElementById("budgetSummary").innerHTML = rows || `<div class="empty">Ajoutez vos budgets mensuels.</div>`;
-}
+csv.addEventListener("change",e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{let lines=String(r.result).split(/\r?\n/).filter(Boolean);let count=0;for(let i=1;i<lines.length;i++){let p=lines[i].split(",");if(p.length<3)continue;let date=p[0].replaceAll('"',"").trim(),desc=p[1].replaceAll('"',"").trim(),amt=parseFloat(p[p.length-1].replace(/[$",]/g,""));if(!date||!desc||isNaN(amt))continue;state.transactions.push({id:String(Date.now()+i),date:new Date(date).toISOString().slice(0,10),type:amt<0?"expense":"income",description:desc,category:"Autre",amount:Math.abs(amt)});count++}persist();alert(count+" transaction(s) importée(s).")};r.readAsText(f)});
 
-function txRow(t){
-  const sign = t.type==="income" ? "+" : "−";
-  const cls = t.type==="income" ? "income" : "expense";
-  return `<div class="row"><div><strong>${escapeHtml(t.description||"Transaction")}</strong><div class="small">${t.date||""} • ${escapeHtml(t.category||"Autre")}</div></div><div style="text-align:right"><div class="amount ${cls}">${sign}${money(t.amount)}</div><button class="btn2" style="padding:5px 8px;margin-top:4px;font-size:11px" onclick="deleteTx('${t.id}')">Supprimer</button></div></div>`;
-}
-
-function renderTransactions(){
-  const sorted=[...state.transactions].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-  document.getElementById("recentTransactions").innerHTML = sorted.slice(0,5).map(txRow).join("") || `<div class="empty">Aucune transaction pour l'instant.</div>`;
-  document.getElementById("allTransactions").innerHTML = sorted.map(txRow).join("") || `<div class="empty">Aucune transaction pour l'instant.</div>`;
-}
-
-function renderBudgetEditor(){
-  document.getElementById("budgetEditor").innerHTML = defaultCategories.map(c=>`<div class="row"><div style="min-width:130px">${c}</div><div style="width:170px"><input class="budgetInput" data-cat="${c}" type="number" step="1" value="${Number(state.budgets[c]||0)}"></div></div>`).join("");
-}
-
-function saveBudgets(){
-  document.querySelectorAll(".budgetInput").forEach(i=>state.budgets[i.dataset.cat]=Number(i.value||0));
-  persist();
-}
-
-function renderAccounts(){
-  accChequing.value=state.accounts.chequing||0; accTfsa.value=state.accounts.tfsa||0; accFhsa.value=state.accounts.fhsa||0; accOther.value=state.accounts.other||0;
-}
-function saveAccounts(){
-  state.accounts={chequing:Number(accChequing.value||0),tfsa:Number(accTfsa.value||0),fhsa:Number(accFhsa.value||0),other:Number(accOther.value||0)};
-  persist();
-}
-
-function renderGoals(){
-  goalList.innerHTML = state.goals.map(g=>{
-    const pct = g.target ? Math.min(100,(g.current/g.target)*100) : 0;
-    return `<div class="row"><div style="flex:1"><div style="display:flex;justify-content:space-between"><strong>${escapeHtml(g.name)}</strong><span class="small">${money(g.current)} / ${money(g.target)}</span></div><div class="progress" style="margin-top:7px"><span style="width:${pct}%"></span></div></div><button class="btn2" onclick="deleteGoal('${g.id}')">×</button></div>`;
-  }).join("") || `<div class="empty">Aucun objectif créé.</div>`;
-}
-function addGoal(){
-  const name=goalName.value.trim(), target=Number(goalTarget.value||0), current=Number(goalCurrent.value||0);
-  if(!name || !target) return alert("Entrez un nom et un montant cible.");
-  state.goals.push({id:crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),name,target,current});
-  goalName.value=""; goalTarget.value=""; goalCurrent.value="";
-  persist();
-}
-function deleteGoal(id){ state.goals=state.goals.filter(g=>g.id!==id); persist(); }
-
-function populateCategories(){
-  txCat.innerHTML = defaultCategories.map(c=>`<option value="${c}">${c}</option>`).join("");
-}
-function showAddTransaction(){
-  transactionForm.classList.remove("hidden");
-  txDate.value = new Date().toISOString().slice(0,10);
-}
-function hideAddTransaction(){ transactionForm.classList.add("hidden"); }
-function saveTransaction(){
-  const amount=Number(txAmount.value||0), desc=txDesc.value.trim();
-  if(!txDate.value || !desc || amount<=0) return alert("Complétez la date, la description et le montant.");
-  state.transactions.push({
-    id:crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-    date:txDate.value, type:txType.value, description:desc, category:txCat.value, amount
-  });
-  txDesc.value=""; txAmount.value=""; hideAddTransaction(); persist();
-}
-function deleteTx(id){ state.transactions=state.transactions.filter(t=>t.id!==id); persist(); }
-
-function showView(name){
-  ["dashboard","transactions","budget","goals"].forEach(v=>{
-    document.getElementById("view-"+v).classList.toggle("hidden",v!==name);
-    document.getElementById("nav-"+v).classList.toggle("active",v===name);
-  });
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function detectCategory(desc){
-  const s=desc.toLowerCase();
-  const rules=[
-    ["Épicerie",["iga","metro","maxi","super c","costco","walmart"]],
-    ["Restaurant",["restaurant","mcdonald","tim hortons","subway","uber eats","doordash"]],
-    ["Essence",["shell","esso","petro","ultramar","canadian tire gas","couche-tard"]],
-    ["Téléphone/Internet",["bell","rogers","telus","videotron","fizz"]],
-    ["Abonnements",["netflix","spotify","apple.com/bill","amazon prime"]],
-    ["Véhicule",["toyota","ford","mazda","garage","auto"]],
-    ["Assurances",["intact","desjardins assurance","belair","sonnet"]]
-  ];
-  for(const [cat,keys] of rules) if(keys.some(k=>s.includes(k))) return cat;
-  return "Autre";
-}
-
-function parseAmount(v){
-  if(v==null) return 0;
-  let s=String(v).trim().replace(/\$/g,"").replace(/\s/g,"");
-  if(s.includes(",") && !s.includes(".")) s=s.replace(",",".");
-  else s=s.replace(/,/g,"");
-  let n=Number(s.replace(/[()]/g,""));
-  if(String(v).includes("(")) n=-Math.abs(n);
-  return isNaN(n)?0:n;
-}
-
-document.getElementById("csvFile").addEventListener("change", e=>{
-  const file=e.target.files[0]; if(!file) return;
-  const r=new FileReader();
-  r.onload=()=>importCSV(String(r.result||""));
-  r.readAsText(file);
-  e.target.value="";
-});
-
-function importCSV(text){
-  const lines=text.split(/\r?\n/).filter(l=>l.trim());
-  if(!lines.length) return alert("CSV vide.");
-  const delim=(lines[0].match(/;/g)||[]).length > (lines[0].match(/,/g)||[]).length ? ";" : ",";
-  const rows=lines.map(l=>splitCSVLine(l,delim));
-  let header=rows[0].map(h=>h.trim().toLowerCase());
-  const hasHeader=header.some(h=>/date|description|amount|montant|debit|credit|withdrawal|deposit/.test(h));
-  const data=hasHeader?rows.slice(1):rows;
-  let count=0;
-
-  for(const row of data){
-    if(row.length<2) continue;
-    let date="", desc="", amount=0, type="expense";
-    if(hasHeader){
-      const obj={}; header.forEach((h,i)=>obj[h]=row[i]||"");
-      date=obj.date || obj["transaction date"] || obj["date de transaction"] || obj["posting date"] || "";
-      desc=obj.description || obj["transaction details"] || obj["détails de la transaction"] || obj.memo || row[1] || "";
-      const debit=parseAmount(obj.debit || obj.withdrawal || obj["retrait"] || "");
-      const credit=parseAmount(obj.credit || obj.deposit || obj["dépôt"] || obj["depot"] || "");
-      if(credit){ amount=Math.abs(credit); type="income"; }
-      else if(debit){ amount=Math.abs(debit); type="expense"; }
-      else {
-        amount=parseAmount(obj.amount || obj.montant || row[row.length-1] || 0);
-        type=amount<0?"expense":"income"; amount=Math.abs(amount);
-      }
-    } else {
-      date=row[0]||""; desc=row[1]||"";
-      amount=parseAmount(row[row.length-1]||0); type=amount<0?"expense":"income"; amount=Math.abs(amount);
-    }
-    const parsedDate=normalizeDate(date);
-    if(!parsedDate || !desc || !amount) continue;
-    state.transactions.push({
-      id:crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()),
-      date:parsedDate, type, description:desc.trim(), category:detectCategory(desc), amount
-    });
-    count++;
-  }
-  persist();
-  alert(`${count} transaction(s) importée(s). Vérifiez les catégories après l'import.`);
-}
-
-function splitCSVLine(line, delim){
-  const out=[]; let cur="", quoted=false;
-  for(let i=0;i<line.length;i++){
-    const c=line[i];
-    if(c=='"'){ if(quoted && line[i+1]=='"'){cur+='"';i++;} else quoted=!quoted; }
-    else if(c===delim && !quoted){out.push(cur);cur="";}
-    else cur+=c;
-  }
-  out.push(cur); return out;
-}
-function normalizeDate(s){
-  s=String(s||"").trim();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  let m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if(m){ const a=Number(m[1]), b=Number(m[2]); return `${m[3]}-${String(b).padStart(2,"0")}-${String(a).padStart(2,"0")}`; }
-  const d=new Date(s); if(!isNaN(d)) return d.toISOString().slice(0,10);
-  return "";
-}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-
-function exportData(){
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="mon-budget-sauvegarde.json"; a.click(); URL.revokeObjectURL(a.href);
-}
-document.getElementById("restoreFile").addEventListener("change",e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader(); r.onload=()=>{try{const x=JSON.parse(r.result); localStorage.setItem("budgetAppState",JSON.stringify(x)); location.reload();}catch{alert("Fichier invalide.");}}; r.readAsText(f);
-});
-function resetData(){
-  if(confirm("Effacer toutes les données de cette application?")){localStorage.removeItem("budgetAppState"); location.reload();}
-}
-if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
 render();
 </script>
-</body>
-</html>
+</body></html>

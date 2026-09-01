@@ -1,6 +1,6 @@
 {
-  "name": "Mon Budget Personnel",
-  "short_name": "Mon Budget",
+  "name": "Flowget",
+  "short_name": "Flowget",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f3f4f6",
